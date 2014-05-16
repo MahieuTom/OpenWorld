@@ -1,19 +1,22 @@
 #include "mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+MainWindow::MainWindow()
 {
     setWindowTitle("OpenWorld · OpenGL project");
     resize(640, 480);
     initView();
 }
 
+//-------------------------------------------------------------
+
 MainWindow::~MainWindow()
 {
 }
 
+//-------------------------------------------------------------
+
 void MainWindow::initView()
 {
-    //view=new PlanetsView(this);
-    //setCentralWidget(view);
+    view = new View(this);
+    setCentralWidget(view);
 }
