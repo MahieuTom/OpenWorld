@@ -31,7 +31,9 @@ RCC_DIR += ./GeneratedFiles
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-        view.cpp
+        view.cpp \
+    coordinate.cpp
 
 HEADERS  += mainwindow.h \
-            view.h
+            view.h \
+    coordinate.h

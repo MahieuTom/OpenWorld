@@ -4,6 +4,7 @@
 #include <QtOpenGL/QGLWidget>
 #include <QTimer>
 #include <QKeyEvent>
+#include "coordinate.h"
 
 class View : public QGLWidget
 {
@@ -20,10 +21,16 @@ protected:
 
     void keyPressEvent(QKeyEvent * e);
 
+    void RotateView(float horizontal, float vertical);
+
 private:
-    double camPosX,  camPosY,  camPosZ;
-    double camUpX,   camUpY,   camUpZ;
-    double camViewX, camViewY, camViewZ;
+    Coordinate camPos;
+    Coordinate camNorm;
+    Coordinate camUp;
+
+    float hRad;
+    float vRad;
+
     QTimer* timer;
 };
 

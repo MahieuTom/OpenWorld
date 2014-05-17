@@ -8,17 +8,12 @@ View::View(QWidget *parent) : QGLWidget(parent)
 
     setFocusPolicy(Qt::StrongFocus);
 
-    camPosX = 3.0;
-    camPosY = 5.0;
-    camPosZ = 25.0;
+    camPos  = Coordinate(3.0, 5.0, 25.0);
+    camNorm = Coordinate(0.0, 0.0,  0.0);
+    camUp   = Coordinate(0.0, 1.0,  0.0);
 
-    camViewX = 0.0;
-    camViewY = 0.0;
-    camViewZ = 0.0;
-
-    camUpX = 0.0;
-    camUpY = 1.0;
-    camUpZ = 0.0;
+    hRad = 0;
+    vRad = 0;
 }
 
 //-------------------------------------------------------------
@@ -36,7 +31,7 @@ void View::initializeGL ()
 
     glShadeModel(GL_SMOOTH);
 
-    // Blauw canvas.
+    // Hemelsblauw canvas.
     glClearColor(0.4f,0.6f,1.0f,0.0f);
 
     // Go!
@@ -50,7 +45,6 @@ void View::resizeGL ( int width, int height )
     if ((width<=0) || (height<=0))
         return;
 
-    //set viewport
     glViewport(0,0,width,height);
 
     glMatrixMode(GL_PROJECTION);
@@ -73,15 +67,15 @@ void View::paintGL ()
 
     glLoadIdentity();
 
-    // store current matrix
+    // Nieuwe matrix:
     glMatrixMode( GL_MODELVIEW );
     glPushMatrix( );
 
-    gluLookAt(camPosX,  camPosY,  camPosZ,  // Vooruit.
-              camViewX, camViewY, camViewZ, //
-              camUpX,   camUpY,   camUpZ);  // Welke kant omhoog?
+    gluLookAt(camPos.x,  camPos.y,  camPos.z,  // Positie.
+              camNorm.x, camNorm.y, camNorm.z, // Kijk naar punt.
+              camUp.x,   camUp.y,   camUp.z);  // Welke kant omhoog.
 
-    //Draw Axes
+    // Assenstelsel tekenen.
     glDisable( GL_LIGHTING );
     glBegin(GL_LINES);
     glColor3f(1.0, 0.0, 0.0);
@@ -96,7 +90,7 @@ void View::paintGL ()
     glEnd();
     glEnable( GL_LIGHTING );
 
-    // restore current matrix
+    // Opslaan:
     glMatrixMode( GL_MODELVIEW );
     glPopMatrix( );
 }
@@ -105,32 +99,46 @@ void View::paintGL ()
 
 void View::keyPressEvent( QKeyEvent * e ) {
 
-    if(e->key() == Qt::Key_Up) {
-        this->camPosZ -= 0.5;
-        this->camViewZ -= 0.5;
-    } if(e->key() == Qt::Key_Down) {
-        this->camPosZ += 0.5;
-        this->camViewZ += 0.5;
-    } if(e->key() == Qt::Key_Right) {
-        this->camPosX += 0.5;
-        this->camViewX += 0.5;
-    } if(e->key() == Qt::Key_Left) {
-        this->camPosX -= 0.5;
-        this->camViewX -= 0.5;
+    if(e->key() == Qt::Key_Up) { // Vooruit
+        this->camPos.z -= 0.5;
+        this->camNorm.z -= 0.5;
+    } if(e->key() == Qt::Key_Down) { // Achteruit
+        this->camPos.z += 0.5;
+        this->camNorm.z += 0.5;
+    } if(e->key() == Qt::Key_Right) { // Rechts
+        this->camPos.x += 0.5;
+        this->camNorm.x += 0.5;
+    } if(e->key() == Qt::Key_Left) { // Links
+        this->camPos.x -= 0.5;
+        this->camNorm.x -= 0.5;
     }
 
     if(e->key() == Qt::Key_PageUp) {
-        this->camViewX += 0.5;
-        this->camViewZ -= 0.5;
+        RotateView(0.5f,0.0f);
     } if(e->key() == Qt::Key_PageDown) {
-        this->camViewX -= 0.5;
-        this->camViewZ += 0.5;
+        RotateView(-.5f,0.0f);
     }
 
-    // this->camViewY -= 0.5; --> Naar beneden kijken.
+    // this->camNorm.y -= 0.5; --> Naar beneden kijken.
     // --------------------------------------------------------
-    // this->camPosZ += 0.5;  --> Over X-as bewegen.
-    // this->camViewZ += 0.5;
+    // this->camPos.z += 0.5;  --> Over X-as bewegen.
+    // this->camNorm.z += 0.5;
     // --------------------------------------------------------
     //
+}
+
+//-------------------------------------------------------------
+
+void View::RotateView(float horizontal, float vertical)
+{
+  hRad += horizontal;
+  vRad += vertical;
+
+  camNorm.x = cos(vRad) * sin(hRad);
+  camNorm.y = -sin(vRad);
+  camNorm.z = cos(vRad) * sin(hRad);
+
+  camUp.x = sin(vRad) * sin(hRad);
+  camUp.y = cos(vRad);
+  camUp.z = sin(vRad) * cos(hRad);
 }
