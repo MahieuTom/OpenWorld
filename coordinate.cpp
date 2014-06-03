@@ -20,6 +20,20 @@ Coordinate::~Coordinate()
 
 void Coordinate::rotate(double angle)
 {
-    // TODO:
-    angle = 0;
+    angle = angle / 360.0 * 2 * 3.141; // Omzetten naar radialen.
+
+    double xNew = x * cos(angle)  + y * sin(angle);
+    double yNew = x * -sin(angle) + y * cos(angle);
+
+    x = xNew;
+    y = yNew;
+}
+
+//-------------------------------------------------------------
+
+void Coordinate::set(double x, double y, double z)
+{
+    this->x = x;
+    this->y = y;
+    this->z = z;
 }

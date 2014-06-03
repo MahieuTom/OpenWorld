@@ -1,6 +1,8 @@
 #ifndef COORDINATE_H
 #define COORDINATE_H
 
+#include <cmath>
+
 class Coordinate
 {
 public:
@@ -9,6 +11,7 @@ public:
     ~Coordinate();
 
     void rotate(double angle);
+    void set(double x, double y, double z);
 
     /* snel aanroepen en aanpassen */
     double x;
