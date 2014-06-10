@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<models>
+    <model name="landscape">
+        <position>
+            <x>50</x>
+            <y>50</y>
+            <z>50</z>
+        </position>
+        <size>
+            <x>20</x>
+            <y>20</y>
+            <z>20</z>
+        </size>
+        <modelLoc type="obj">finaltest.obj</modelLoc>
+    </model>
+</models>
