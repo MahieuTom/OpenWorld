@@ -1,3 +1,4 @@
+#include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <cstdlib>
@@ -5,11 +6,15 @@
 #include "Loader.h"
 #include <vector>
 
+
 void init();
 void reshape(int w, int h);
+void clearRam(); 
+void OnExit();
 
-std::vector<Model*> models;
+std::vector<ObjectModel*> models;
 Camera* cam;
+
 
 void renderScene(void) {
 
@@ -18,8 +23,8 @@ void renderScene(void) {
     
     cam->update();
 
-    glColor3f(0, 1.0, 1.0);
-    glutWireTeapot(0.5);
+    //glColor3f(0, 1.0, 1.0);
+    //glutWireTeapot(0.5);
     
     glPushMatrix();
     glColor3f(1, 1, 1);
@@ -37,7 +42,8 @@ void renderScene(void) {
         glVertex3f(50, 0, i);
         glEnd();
     }
-
+    
+    //glutSolidTeapot(0.5);
     
     
     for (unsigned int i = 0; i < models.size(); i++) {
@@ -53,8 +59,6 @@ void renderScene(void) {
 
 int main(int argc, char **argv) {
     // init GLUT.
-    Loader* loader = new Loader();
-    models = loader->parseXML();
     
     cam = new Camera();
     
@@ -70,14 +74,22 @@ int main(int argc, char **argv) {
     // Tekenen van programma.
     glutDisplayFunc(renderScene);
     glutReshapeFunc(reshape);
-
-    
     
     
     init();
     
+    Loader* loader = new Loader();
+    models = loader->parseXML();
+    delete loader;
+    
+    atexit(OnExit);
+    
     // Go Go Glut.
     glutMainLoop();
+    
+    
+    //delete everything
+    //clearRam(); //TODO
 
     return EXIT_SUCCESS;
 }
@@ -90,10 +102,10 @@ void init() {
 
     /*  initialize viewing values  */
     glMatrixMode(GL_PROJECTION);
-    //glLoadIdentity();
+    
     glMatrixMode(GL_MODELVIEW);
     glShadeModel( GL_SMOOTH );
-    //glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0);
+    
     glEnable( GL_DEPTH_TEST );
     glDepthFunc( GL_LEQUAL );
     glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
@@ -114,9 +126,23 @@ void init() {
     glEnable( GL_DEPTH_TEST );
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0); 
+    
+	// enable texturing
+	glEnable(GL_TEXTURE_2D);
+
+	// tell openGL to generate the texture coords for a sphere map
+	glTexGeni(GL_S,GL_TEXTURE_GEN_MODE,GL_EYE_LINEAR);
+	glTexGeni(GL_T,GL_TEXTURE_GEN_MODE,GL_EYE_LINEAR);
+
+	// enable automatic texture coordinate generation
+	glEnable(GL_TEXTURE_GEN_S);
+	glEnable(GL_TEXTURE_GEN_T);
 }
 
 void reshape(int w, int h) {
+    if(h == 0){
+        h = 1;
+    }
     //glMatrixMode(GL_PROJECTION);
     glViewport(0, 0, (GLsizei) w, (GLsizei) h);
     //glMatrixMode (GL_PROJECTION);
@@ -124,4 +150,15 @@ void reshape(int w, int h) {
     gluPerspective(45.0, (GLfloat) w / (GLfloat) h, 1.0, 10000.0);
     //glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+}
+
+void OnExit(){
+    clearRam();
+}
+
+void clearRam(){
+    delete cam;
+    for (unsigned int i = 0; i < models.size(); i++) {
+        delete models.at(i);
+    }
 }

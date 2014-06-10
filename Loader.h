@@ -16,25 +16,34 @@
 #include <vector>
 
 #include "Model.h"
+#include "ObjectModel.h"
+#include "texture.h"
 
 class Loader {
 public:
     Loader();
     Loader(const Loader& orig);
 
-    std::vector<Model*> parseXML();
+    std::vector<ObjectModel*> parseXML();
 
     virtual ~Loader();
 private:
+    
+    struct ModelPadPair{
+        Model* model;
+        std::string pad;
+    };
 
     std::string location;
+    std::vector<ModelPadPair> modelList;
 
 
-    Model* parseXMLModel(QDomElement model);
+    ObjectModel* parseXMLModel(QDomElement model);
 
     void parsePosition(QDomElement position, int& xpos, int& ypos, int& zpos);
-    void parseSize(QDomElement position, int& xpos, int& ypos, int& zpos);
+    void parseSize(QDomElement position, double& xpos, double& ypos, double& zpos);
     void parseModelLoc(QDomElement modelLoc, QString& type, QString& pad);
+    void parseModelTexture(QDomElement modelTex, QString& pad);
     QDomElement getFirstByTag(QDomElement element, QString tag);
     QString getFirstByTagS(QDomElement element, QString tag);
 

@@ -8,25 +8,29 @@
 #include "Model.h"
 
 Model::Model() {
-    pos = new Coordinate(0, 0, 0);
-    xsize = 1;
-    ysize = 1;
-    zsize = 1;
     modeltype = "";
     modelpad = "";
     TotalConnectedTriangles = 0;
+    Faces_Triangles = new float[0];
+    normals = new float[0];
+    texture = 0;
 }
 
-Model::Model(int xpos, int ypos, int zpos, int xsize, int ysize, int zsize, QString modeltype, QString modelpad) {
-    pos = new Coordinate(xpos, ypos, zpos);
-    this->xsize = xsize;
-    this->ysize = ysize;
-    this->zsize = zsize;
+Model::Model(QString modeltype, QString modelpad) {
     this->modeltype = modeltype;
     this->modelpad = modelpad;
+    TotalConnectedTriangles = 0;
+    Faces_Triangles = new float[0];
+    normals = new float[0];
+    texture = 0;
 }
 
 Model::Model(const Model& orig) {
+    this->modeltype = orig.modeltype;
+    this->modelpad = orig.modelpad;
+    TotalConnectedTriangles = orig.TotalConnectedTriangles;
+    Faces_Triangles = orig.Faces_Triangles;
+    normals = orig.normals;
 }
 
 bool Model::loadModel() {
@@ -47,9 +51,11 @@ int Model::loadOBJ() {
         long fileSize = objFile.tellg(); // get file size
         objFile.seekg(0, std::ios::beg); // we'll use this to register memory for our 3d model
 
-        vertexBuffer = (float*) malloc(fileSize); // Allocate memory for the verteces
-        Faces_Triangles = (float*) malloc(fileSize * sizeof (float)); // Allocate memory for the triangles
-        normals = (float*) malloc(fileSize * sizeof (float)); // Allocate memory for the normals
+        delete Faces_Triangles;
+        delete normals;
+        vertexBuffer = new float[fileSize]; // Allocate memory for the verteces
+        Faces_Triangles = new float[fileSize]; // Allocate memory for the triangles
+        normals = new float[fileSize]; // Allocate memory for the normals
 
         int triangle_index = 0; // Set triangle index to zero
         int normal_index = 0; // Set normal index to zero
@@ -119,7 +125,7 @@ int Model::loadOBJ() {
                 TotalConnectedTriangles += TOTAL_FLOATS_IN_TRIANGLE;
             }
         }
-        free(vertexBuffer);
+        delete vertexBuffer;
         objFile.close(); // Close OBJ file
     } else {
         std::cout << "Unable to open file";
@@ -156,6 +162,9 @@ float* Model::calculateNormal(float *coord1, float *coord2, float *coord3) {
 }
 
 void Model::Draw() {
+    //if(texture != 0){
+        glBindTexture(GL_TEXTURE_2D,texture);
+    //}
     glEnableClientState(GL_VERTEX_ARRAY); // Enable vertex arrays
     glEnableClientState(GL_NORMAL_ARRAY); // Enable normal arrays
     glVertexPointer(3, GL_FLOAT, 0, Faces_Triangles); // Vertex Pointer to triangle array
@@ -163,11 +172,17 @@ void Model::Draw() {
     glDrawArrays(GL_TRIANGLES, 0, TotalConnectedTriangles); // Draw the triangles
     glDisableClientState(GL_VERTEX_ARRAY); // Disable vertex arrays
     glDisableClientState(GL_NORMAL_ARRAY); // Disable normal arrays
+    /*if(texture != 0){
+        glBindTexture(GL_TEXTURE_2D,texture);
+    }*/
+    glDeleteTextures(1, &texture);
+}
+
+void Model::setTexture(unsigned int texture){
+    this->texture = texture;
 }
 
 Model::~Model() {
-    delete pos;
-    free(Faces_Triangles);				// Stores the triangles
-    free(normals);                                     // Stores the normals
+    delete Faces_Triangles; // Stores the triangles
+    delete normals; // Stores the normals
 }
-

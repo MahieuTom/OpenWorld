@@ -33,7 +33,7 @@
 class Model {
 public:
     Model();
-    Model(int xpos, int ypos, int zpos, int xsize, int ysize, int zsize, QString modeltype, QString modelpad);
+    Model(QString modeltype, QString modelpad);
     Model(const Model& orig);
     
     bool loadModel();
@@ -43,18 +43,18 @@ public:
     
     void Draw();
     
+    void setTexture(unsigned int texture);
+    
     virtual ~Model();
 private:
-    Coordinate* pos;
-    int xsize;
-    int ysize;
-    int zsize;
     QString modeltype;
     QString modelpad;
     
     float* Faces_Triangles;				// Stores the triangles
     float* normals;                                     // Stores the normals
     long TotalConnectedTriangles;			// Stores the total number of connected triangles
+    
+    unsigned int texture;
 };
 
 #endif	/* MODEL_H */
