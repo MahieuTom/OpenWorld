@@ -119,6 +119,7 @@ int Model::loadOBJ() {
                 TotalConnectedTriangles += TOTAL_FLOATS_IN_TRIANGLE;
             }
         }
+        free(vertexBuffer);
         objFile.close(); // Close OBJ file
     } else {
         std::cout << "Unable to open file";
