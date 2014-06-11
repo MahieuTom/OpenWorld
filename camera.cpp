@@ -22,17 +22,21 @@ Camera::Camera(ObjectModel* fixObject) {
     xOrigin = -1;
     yOrigin = -1;
     this->fixObject = fixObject;
+    camPosChanged = true;
 }
 
 //-------------------------------------------------------------
 
 void Camera::update() {
     glMatrixMode(GL_MODELVIEW);
-    if(fixObject != NULL){
+    if(fixObject != NULL && camPosChanged){
         camPos.y = (fixObject->getModelZ(camPos.x,camPos.z) + camPos.y)/2;
+        //cam boven landschape
+        camPos.y += 1;
+        camPosChanged = false;
     }
-    //cam boven landschape
-    camPos.y += 1;
+    
+    
     glLoadIdentity();
     gluLookAt(camPos.x, camPos.y, camPos.z,
             camPos.x + lookAt.x, camPos.y + lookAt.y, camPos.z + lookAt.z,
@@ -60,6 +64,7 @@ void Camera::keyPress(int key, int x, int y) {
             camPos.z -= pace * lookAt.z;
             break;
     }
+    camPosChanged = true;
 }
 
 //-------------------------------------------------------------
@@ -98,5 +103,8 @@ Coordinate Camera::getCamPos(){
     return camPos;
 }
 
+Coordinate Camera::getCamLook(){
+    return lookAt;
+}
 
 

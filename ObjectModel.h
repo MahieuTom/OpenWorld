@@ -13,7 +13,7 @@
 class ObjectModel {
 public:
     ObjectModel();
-    ObjectModel(int xpos, int ypos, int zpos, double xsize, double ysize, double zsize, Model* model, bool modelOwner = false);
+    ObjectModel(double xpos, double ypos, double zpos, double xsize, double ysize, double zsize, Model* model, bool modelOwner = false);
     ObjectModel(const ObjectModel& orig);
     
     void Draw();

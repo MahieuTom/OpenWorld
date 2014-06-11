@@ -17,7 +17,7 @@ ObjectModel::ObjectModel() {
 }
 
 
-ObjectModel::ObjectModel(int xpos, int ypos, int zpos, double xsize, double ysize, double zsize, Model* model, bool modelOwner){
+ObjectModel::ObjectModel(double xpos, double ypos, double zpos, double xsize, double ysize, double zsize, Model* model, bool modelOwner){
     pos = new Coordinate(xpos, ypos, zpos);
     this->xsize = xsize;
     this->ysize = ysize;

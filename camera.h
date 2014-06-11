@@ -23,6 +23,7 @@ private:
     double pace;
     int xOrigin, yOrigin;
     ObjectModel* fixObject;
+    bool camPosChanged;
 public:
     Camera(ObjectModel* fixObject = NULL);
     ~Camera() { }
@@ -31,6 +32,7 @@ public:
     void mouseMove(int x, int y);
     void mouseButton(int button, int state, int x, int y);
     Coordinate getCamPos();
+    Coordinate getCamLook();
 };
 
 #endif // CAMERA_H

@@ -47,11 +47,10 @@ std::vector<ObjectModel*> Loader::parseXML() {
 
     mDocumentElement = mDocument.documentElement();
     QDomNodeList models = mDocumentElement.elementsByTagName("model");
-    std::cout << models.size();
+    std::cout << "aantal models: " << models.size();
     for (int i = 0; i < models.count(); i++) {
         loadedmodels.push_back(parseXMLModel(models.at(i).toElement()));
     }
-    
 
     return loadedmodels;
 }
@@ -61,7 +60,7 @@ ObjectModel* Loader::parseXMLModel(QDomElement model) {
     
     
     
-    int xpos = 0, ypos = 0, zpos = 0;
+    double xpos = 0, ypos = 0, zpos = 0;
     double xsize = 1;
     double ysize = 1;
     double zsize = 1;
@@ -100,19 +99,16 @@ ObjectModel* Loader::parseXMLModel(QDomElement model) {
     
     ObjectModel* object = new ObjectModel(xpos, ypos, zpos, xsize, ysize, zsize, newModel, !modelfound);
     
-    std::cout << "camtext:" << model.attribute("camover").toStdString() << std::endl;
-    std::cout << "camtext:" << model.attribute("camover").toStdString().compare("true") << std::endl;
     if(model.attribute("camover").toStdString().compare("true") == 0){
         cam = new Camera(object);
-        std::cout << "camset;"<< std::endl;
     }
     return object;
 }
 
-void Loader::parsePosition(QDomElement position, int& xpos, int& ypos, int& zpos){
-    xpos = getFirstByTagS(position, "x").toInt();
-    ypos = getFirstByTagS(position, "y").toInt();
-    zpos = getFirstByTagS(position, "z").toInt();
+void Loader::parsePosition(QDomElement position, double& xpos, double& ypos, double& zpos){
+    xpos = getFirstByTagS(position, "x").toDouble();
+    ypos = getFirstByTagS(position, "y").toDouble();
+    zpos = getFirstByTagS(position, "z").toDouble();
 }
 
 void Loader::parseSize(QDomElement size, double& xpos, double& ypos, double& zpos){

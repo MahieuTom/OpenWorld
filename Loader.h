@@ -45,7 +45,7 @@ private:
 
     ObjectModel* parseXMLModel(QDomElement model);
 
-    void parsePosition(QDomElement position, int& xpos, int& ypos, int& zpos);
+    void parsePosition(QDomElement position, double& xpos, double& ypos, double& zpos);
     void parseSize(QDomElement position, double& xpos, double& ypos, double& zpos);
     void parseModelLoc(QDomElement modelLoc, QString& type, QString& pad);
     void parseModelTexture(QDomElement modelTex, QString& pad);

@@ -12,7 +12,133 @@
             <y>1</y>
             <z>1</z>
         </size>
-        <modelLoc type="obj">landscape.obj</modelLoc>
-        <!--<modelTexture>test.tga</modelTexture>-->
+        <modelLoc type="obj">obj/landscape.obj</modelLoc>
+        <modelTexture>grass.tga</modelTexture>
+    </model>
+    <model name="tree">
+        <position>
+            <x>0</x>
+            <y>1.5</y>
+            <z>0</z>
+        </position>
+        <size>
+            <x>1</x>
+            <y>1</y>
+            <z>1</z>
+        </size>
+        <modelLoc type="obj">obj/treestump.obj</modelLoc>
+        <modelTexture>w3.tga</modelTexture>
+    </model>
+    <model name="tree">
+        <position>
+            <x>7</x>
+            <y>1.5</y>
+            <z>0.5</z>
+        </position>
+        <size>
+            <x>1</x>
+            <y>1</y>
+            <z>1</z>
+        </size>
+        <modelLoc type="obj">obj/treestump.obj</modelLoc>
+        <modelTexture>w3.tga</modelTexture>
+    </model>
+    <model name="tree">
+        <position>
+            <x>3</x>
+            <y>2.5</y>
+            <z>-6</z>
+        </position>
+        <size>
+            <x>1</x>
+            <y>1</y>
+            <z>1</z>
+        </size>
+        <modelLoc type="obj">obj/treestump.obj</modelLoc>
+        <modelTexture>w3.tga</modelTexture>
+    </model>
+    <model name="tree">
+        <position>
+            <x>0</x>
+            <y>2</y>
+            <z>-2</z>
+        </position>
+        <size>
+            <x>1</x>
+            <y>1</y>
+            <z>1</z>
+        </size>
+        <modelLoc type="obj">obj/tree.obj</modelLoc>
+        <modelTexture>tree.tga</modelTexture>
+    </model>
+    <model name="tree">
+        <position>
+            <x>5</x>
+            <y>1.5</y>
+            <z>6</z>
+        </position>
+        <size>
+            <x>1</x>
+            <y>1</y>
+            <z>1</z>
+        </size>
+        <modelLoc type="obj">obj/tree.obj</modelLoc>
+        <modelTexture>tree.tga</modelTexture>
+    </model>
+    <model name="tree">
+        <position>
+            <x>-9</x>
+            <y>2</y>
+            <z>4</z>
+        </position>
+        <size>
+            <x>1</x>
+            <y>1</y>
+            <z>1</z>
+        </size>
+        <modelLoc type="obj">obj/tree.obj</modelLoc>
+        <modelTexture>tree.tga</modelTexture>
+    </model>
+    <model name="tree">
+        <position>
+            <x>9</x>
+            <y>1.5</y>
+            <z>-7</z>
+        </position>
+        <size>
+            <x>1</x>
+            <y>1</y>
+            <z>1</z>
+        </size>
+        <modelLoc type="obj">obj/tree.obj</modelLoc>
+        <modelTexture>tree.tga</modelTexture>
+    </model>
+    <model name="tree">
+        <position>
+            <x>10</x>
+            <y>1</y>
+            <z>-5</z>
+        </position>
+        <size>
+            <x>1</x>
+            <y>1</y>
+            <z>1</z>
+        </size>
+        <modelLoc type="obj">obj/tree.obj</modelLoc>
+        <modelTexture>tree.tga</modelTexture>
+    </model>
+    <model name="house">
+        <position>
+            <x>-1</x>
+            <y>1.7</y>
+            <z>0</z>
+        </position>
+        <size>
+            <x>1</x>
+            <y>1</y>
+            <z>1</z>
+        </size>
+        <modelLoc type="obj">obj/house.obj</modelLoc>
+        <modelTexture>house.tga</modelTexture>
     </model>
 </models>

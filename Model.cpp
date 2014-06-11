@@ -201,14 +201,11 @@ float Model::getModelZ(float x, float z){
                     dichtstebij.at(j)->x  = vertexBuffer[i];
                     dichtstebij.at(j)->y  = vertexBuffer[i+1];
                     dichtstebij.at(j)->z  = vertexBuffer[i+2];
-                    //std::cout << "xdif: " << std::abs(x - vertexBuffer[i]) << " zdif: " << std::abs(z - vertexBuffer[i+2]) <<std::endl;
-                    //std::cout << "1: " << dichtstebij.at(0)->y << " 2: " << dichtstebij.at(1)->y << " 3: " << dichtstebij.at(2)->y <<std::endl;
                     break;
                 }
             }
         }
         float maxZpos = max(max(dichtstebij.at(0)->y,dichtstebij.at(1)->y),dichtstebij.at(2)->y);
-        //std::cout << "1: " << dichtstebij.at(0)->y << " 2: " << dichtstebij.at(1)->y << " 3: " << dichtstebij.at(2)->y <<std::endl;
         for(unsigned int j = 0; j < dichtstebij.size(); j++){
             delete dichtstebij.at(j);
         }
