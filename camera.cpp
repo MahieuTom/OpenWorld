@@ -19,6 +19,7 @@ Camera::Camera() {
     pace = 0.2;
 
     xOrigin = -1;
+		yOrigin = -1;
 }
 
 //-------------------------------------------------------------
@@ -33,21 +34,23 @@ void Camera::update() {
 
 //-------------------------------------------------------------
 
-void Camera::keyPress(int key, int x, int y) { // CHANGED
+void Camera::keyPress(int key, int x, int y) {
     switch (key) {
         case GLUT_KEY_LEFT:
-            camPos.z -= pace; // *0.1f;
+            camPos.x += pace * lookAt.x;
+            camPos.z -= pace * lookAt.z;
             break;
         case GLUT_KEY_RIGHT:
-            camPos.z += pace; // *0.1f;
+            camPos.x -= pace * lookAt.x;
+            camPos.z += pace * lookAt.z;
             break;
         case GLUT_KEY_UP:
-            camPos.x += pace * lookAt.x; // *0.1f;
-            camPos.z += pace * lookAt.z; // *0.1f;
+            camPos.x += pace * lookAt.x;
+            camPos.z += pace * lookAt.z;
             break;
         case GLUT_KEY_DOWN:
-            camPos.x -= pace * lookAt.x; // *0.1f;
-            camPos.z -= pace * lookAt.z; // *0.1f;
+            camPos.x -= pace * lookAt.x;
+            camPos.z -= pace * lookAt.z;
             break;
     }
 }
@@ -56,11 +59,13 @@ void Camera::keyPress(int key, int x, int y) { // CHANGED
 
 void Camera::mouseMove(int x, int y) {
     // Enkel verplaatsen als linker muisknop ingedrukt wordt.
-    if (xOrigin >= 0) {
+    if (xOrigin >= 0 && yOrigin >= 0) {
         deltaAngle = (x - xOrigin) * 0.001f;
+				int deltaY = (y - yOrigin) * 0.001f;
         // Verander de richting.
         lookAt.x = sin(angle + deltaAngle);
         lookAt.z = -cos(angle + deltaAngle);
+				lookAt.y += deltaY;
     }
 }
 
@@ -74,8 +79,10 @@ void Camera::mouseButton(int button, int state, int x, int y) {
             angle += deltaAngle;
             deltaAngle = 0.0f;
             xOrigin = -1;
+						yOrigin = -1;
         } else { // Als het ingedrukt is.
             xOrigin = x;
+						yOrigin = y;
         }
     }
 }

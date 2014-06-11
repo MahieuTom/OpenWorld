@@ -20,7 +20,7 @@ private:
     float deltaAngle;
     float angle;
     double pace;
-    int xOrigin;
+    int xOrigin, yOrigin;
 public:
     Camera();
     ~Camera() { }
