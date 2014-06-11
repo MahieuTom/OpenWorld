@@ -92,10 +92,9 @@ ObjectModel* Loader::parseXMLModel(QDomElement model) {
         unsigned int texture = 0;
         texture = LoadTexture(modelTex.toStdString().c_str());
         newModel->setTexture(texture);
-        std::cout << texture;
     }
     
-    ObjectModel* object = new ObjectModel(xpos, ypos, zpos, xsize, ysize, zsize, newModel);
+    ObjectModel* object = new ObjectModel(xpos, ypos, zpos, xsize, ysize, zsize, newModel, !modelfound);
     return object;
 }
 

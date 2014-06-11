@@ -383,7 +383,7 @@ int LoadTgaImage(const char filename[],unsigned char** ppData,unsigned int* w,un
 		if( header.m_ImageType  == 9 )
 		{
 			/* This pointer holds reference to the actual 8bit data */
-			unsigned char* tempptr = *ppData;
+			//unsigned char* tempptr = *ppData;
 
 			/* number of bytes per row */
 			unsigned int rowsize = (header.m_ColourMapESize/8) * header.m_Width;
@@ -468,7 +468,7 @@ int LoadTgaImage(const char filename[],unsigned char** ppData,unsigned int* w,un
 		if( header.m_ImageType  == 10 )
 		{
 			/* This pointer holds reference to the actual 8bit data */
-			unsigned char* tempptr = *ppData;
+			//unsigned char* tempptr = *ppData;
 
 			/* number of bytes per row */
 			unsigned int rowsize = (*bpp) * header.m_Width;

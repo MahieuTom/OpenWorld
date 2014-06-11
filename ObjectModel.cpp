@@ -13,16 +13,17 @@ ObjectModel::ObjectModel() {
     ysize = 1;
     zsize = 1;
     model = NULL;
+    modelOwner = false;
 }
 
 
-ObjectModel::ObjectModel(int xpos, int ypos, int zpos, double xsize, double ysize, double zsize, Model* model){
+ObjectModel::ObjectModel(int xpos, int ypos, int zpos, double xsize, double ysize, double zsize, Model* model, bool modelOwner){
     pos = new Coordinate(xpos, ypos, zpos);
     this->xsize = xsize;
     this->ysize = ysize;
     this->zsize = zsize;
     this->model = model;
-    
+    modelOwner = modelOwner;
 }
 
 ObjectModel::ObjectModel(const ObjectModel& orig) {
@@ -31,6 +32,7 @@ ObjectModel::ObjectModel(const ObjectModel& orig) {
     ysize = orig.ysize;
     zsize = orig.zsize;
     model = orig.model;
+    modelOwner = false;
 }
 
 
@@ -42,5 +44,8 @@ void ObjectModel::Draw(){
 
 
 ObjectModel::~ObjectModel() {
+    if(modelOwner){
+        delete model;
+    }
 }
 

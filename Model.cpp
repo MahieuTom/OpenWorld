@@ -119,6 +119,7 @@ int Model::loadOBJ() {
                     normals[normal_index + tCounter + 2] = norm[2];
                     tCounter += POINTS_PER_VERTEX;
                 }
+                delete norm;
 
                 triangle_index += TOTAL_FLOATS_IN_TRIANGLE;
                 normal_index += TOTAL_FLOATS_IN_TRIANGLE;
@@ -152,7 +153,7 @@ float* Model::calculateNormal(float *coord1, float *coord2, float *coord3) {
     /* normalization factor */
     val = sqrt(vr[0] * vr[0] + vr[1] * vr[1] + vr[2] * vr[2]);
 
-    float norm[3];
+    float* norm = new float[3];
     norm[0] = vr[0] / val;
     norm[1] = vr[1] / val;
     norm[2] = vr[2] / val;
@@ -162,9 +163,9 @@ float* Model::calculateNormal(float *coord1, float *coord2, float *coord3) {
 }
 
 void Model::Draw() {
-    //if(texture != 0){
+    if(texture != 0){
         glBindTexture(GL_TEXTURE_2D,texture);
-    //}
+    }
     glEnableClientState(GL_VERTEX_ARRAY); // Enable vertex arrays
     glEnableClientState(GL_NORMAL_ARRAY); // Enable normal arrays
     glVertexPointer(3, GL_FLOAT, 0, Faces_Triangles); // Vertex Pointer to triangle array
@@ -172,10 +173,9 @@ void Model::Draw() {
     glDrawArrays(GL_TRIANGLES, 0, TotalConnectedTriangles); // Draw the triangles
     glDisableClientState(GL_VERTEX_ARRAY); // Disable vertex arrays
     glDisableClientState(GL_NORMAL_ARRAY); // Disable normal arrays
-    /*if(texture != 0){
-        glBindTexture(GL_TEXTURE_2D,texture);
-    }*/
-    glDeleteTextures(1, &texture);
+    if(texture != 0){
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
 }
 
 void Model::setTexture(unsigned int texture){
@@ -185,4 +185,7 @@ void Model::setTexture(unsigned int texture){
 Model::~Model() {
     delete Faces_Triangles; // Stores the triangles
     delete normals; // Stores the normals
+    if(texture != 0){
+        glDeleteTextures(1, &texture);
+    }
 }
