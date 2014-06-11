@@ -1,3 +1,9 @@
+/* 
+ * File:   camera.cpp
+ * Author: Tom Mahieu <tom.mahieu@student.uhasselt.be>
+ * 
+ * Created on May 17, 2014, 2;29 PM
+ */
 #include "camera.h"
 #include "ObjectModel.h"
 
@@ -14,6 +20,7 @@ Camera::Camera(ObjectModel* fixObject) {
     pace = 0.2;
 
     xOrigin = -1;
+    yOrigin = -1;
     this->fixObject = fixObject;
 }
 
@@ -35,34 +42,22 @@ void Camera::update() {
 //-------------------------------------------------------------
 
 void Camera::keyPress(int key, int x, int y) {
-    float fraction = 0.1f;
-
     switch (key) {
         case GLUT_KEY_LEFT:
-            angle -= 0.01f;
-            lookAt.x = sin(angle);
-            lookAt.z = -cos(angle);
+            camPos.x += pace * lookAt.x;
+            camPos.z -= pace * lookAt.z;
             break;
         case GLUT_KEY_RIGHT:
-            angle += 0.01f;
-            lookAt.x = sin(angle);
-            lookAt.z = -cos(angle);
+            camPos.x -= pace * lookAt.x;
+            camPos.z += pace * lookAt.z;
             break;
         case GLUT_KEY_UP:
-            /*
-                        camPos.x += lookAt.x * pace;
-                        camPos.z += lookAt.z * pace;
-             */
-            camPos.x += pace * lookAt.x; // *0.1f;
-            camPos.z += pace * lookAt.z; // *0.1f;
+            camPos.x += pace * lookAt.x;
+            camPos.z += pace * lookAt.z;
             break;
         case GLUT_KEY_DOWN:
-            /*
-                        camPos.x -= lookAt.x * pace;
-                        camPos.z -= lookAt.z * pace;
-             */
-            camPos.x -= pace * lookAt.x; // *0.1f;
-            camPos.z -= pace * lookAt.z; // *0.1f;
+            camPos.x -= pace * lookAt.x;
+            camPos.z -= pace * lookAt.z;
             break;
     }
 }
@@ -71,11 +66,13 @@ void Camera::keyPress(int key, int x, int y) {
 
 void Camera::mouseMove(int x, int y) {
     // Enkel verplaatsen als linker muisknop ingedrukt wordt.
-    if (xOrigin >= 0) {
+    if (xOrigin >= 0 && yOrigin >= 0) {
         deltaAngle = (x - xOrigin) * 0.001f;
+				int deltaY = (y - yOrigin) * 0.001f;
         // Verander de richting.
         lookAt.x = sin(angle + deltaAngle);
         lookAt.z = -cos(angle + deltaAngle);
+				lookAt.y += deltaY;
     }
 }
 
@@ -89,9 +86,10 @@ void Camera::mouseButton(int button, int state, int x, int y) {
             angle += deltaAngle;
             deltaAngle = 0.0f;
             xOrigin = -1;
+						yOrigin = -1;
         } else { // Als het ingedrukt is.
             xOrigin = x;
-
+						yOrigin = y;
         }
     }
 }

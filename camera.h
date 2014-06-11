@@ -1,3 +1,9 @@
+/* 
+ * File:   camera.h
+ * Author: Tom Mahieu <tom.mahieu@student.uhasselt.be>
+ * 
+ * Created on May 17, 2014, 2;29 PM
+ */
 #ifndef CAMERA_H
 #define CAMERA_H
 
@@ -15,7 +21,7 @@ private:
     float deltaAngle;
     float angle;
     double pace;
-    int xOrigin;
+    int xOrigin, yOrigin;
     ObjectModel* fixObject;
 public:
     Camera(ObjectModel* fixObject = NULL);
