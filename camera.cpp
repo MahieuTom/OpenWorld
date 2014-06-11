@@ -1,3 +1,9 @@
+/* 
+ * File:   camera.cpp
+ * Author: Tom Mahieu <tom.mahieu@student.uhasselt.be>
+ * 
+ * Created on May 17, 2014, 2;29 PM
+ */
 #include "camera.h"
 
 /**
@@ -27,33 +33,19 @@ void Camera::update() {
 
 //-------------------------------------------------------------
 
-void Camera::keyPress(int key, int x, int y) {
-    float fraction = 0.1f;
-
+void Camera::keyPress(int key, int x, int y) { // CHANGED
     switch (key) {
         case GLUT_KEY_LEFT:
-            angle -= 0.01f;
-            lookAt.x = sin(angle);
-            lookAt.z = -cos(angle);
+            camPos.z -= pace; // *0.1f;
             break;
         case GLUT_KEY_RIGHT:
-            angle += 0.01f;
-            lookAt.x = sin(angle);
-            lookAt.z = -cos(angle);
+            camPos.z += pace; // *0.1f;
             break;
         case GLUT_KEY_UP:
-            /*
-                        camPos.x += lookAt.x * pace;
-                        camPos.z += lookAt.z * pace;
-             */
             camPos.x += pace * lookAt.x; // *0.1f;
             camPos.z += pace * lookAt.z; // *0.1f;
             break;
         case GLUT_KEY_DOWN:
-            /*
-                        camPos.x -= lookAt.x * pace;
-                        camPos.z -= lookAt.z * pace;
-             */
             camPos.x -= pace * lookAt.x; // *0.1f;
             camPos.z -= pace * lookAt.z; // *0.1f;
             break;
@@ -84,7 +76,6 @@ void Camera::mouseButton(int button, int state, int x, int y) {
             xOrigin = -1;
         } else { // Als het ingedrukt is.
             xOrigin = x;
-
         }
     }
 }
