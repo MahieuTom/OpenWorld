@@ -18,6 +18,7 @@
 #include "Model.h"
 #include "ObjectModel.h"
 #include "texture.h"
+#include "camera.h"
 
 class Loader {
 public:
@@ -25,6 +26,8 @@ public:
     Loader(const Loader& orig);
 
     std::vector<ObjectModel*> parseXML();
+    
+    Camera* getCam(){return cam;};
 
     virtual ~Loader();
 private:
@@ -33,6 +36,8 @@ private:
         Model* model;
         std::string pad;
     };
+    
+    Camera* cam;
 
     std::string location;
     std::vector<ModelPadPair> modelList;
@@ -46,6 +51,7 @@ private:
     void parseModelTexture(QDomElement modelTex, QString& pad);
     QDomElement getFirstByTag(QDomElement element, QString tag);
     QString getFirstByTagS(QDomElement element, QString tag);
+    
 
 };
 

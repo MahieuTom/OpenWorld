@@ -6,9 +6,11 @@
  */
 
 #include "Loader.h"
+#include "camera.h"
 
 Loader::Loader() {
     location = ":/loadfile.xml";
+    cam = NULL;
 }
 
 Loader::Loader(const Loader& orig) {
@@ -55,7 +57,9 @@ std::vector<ObjectModel*> Loader::parseXML() {
 }
 
 ObjectModel* Loader::parseXMLModel(QDomElement model) {
-    //std::cout << model.attribute("name").toStdString(); print object name
+    //std::cout << model.attribute("name").toStdString(); //print object name
+    
+    
     
     int xpos = 0, ypos = 0, zpos = 0;
     double xsize = 1;
@@ -95,6 +99,13 @@ ObjectModel* Loader::parseXMLModel(QDomElement model) {
     }
     
     ObjectModel* object = new ObjectModel(xpos, ypos, zpos, xsize, ysize, zsize, newModel, !modelfound);
+    
+    std::cout << "camtext:" << model.attribute("camover").toStdString() << std::endl;
+    std::cout << "camtext:" << model.attribute("camover").toStdString().compare("true") << std::endl;
+    if(model.attribute("camover").toStdString().compare("true") == 0){
+        cam = new Camera(object);
+        std::cout << "camset;"<< std::endl;
+    }
     return object;
 }
 

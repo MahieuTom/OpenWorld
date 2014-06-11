@@ -1,20 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <models>
-    <model name="landscape">
-        <position>
-            <x>0</x>
-            <y>0</y>
-            <z>1</z>
-        </position>
-        <size>
-            <x>1</x>
-            <y>1</y>
-            <z>1</z>
-        </size>
-        <modelLoc type="obj">atest.obj</modelLoc>
-        <modelTexture>test.tga</modelTexture>
-    </model>
-    <model name="landscape">
+
+    <model name="landscape" camover="true">
         <position>
             <x>0</x>
             <y>1</y>
@@ -25,6 +12,7 @@
             <y>1</y>
             <z>1</z>
         </size>
-        <modelLoc type="obj">cil.obj</modelLoc>
+        <modelLoc type="obj">landscape.obj</modelLoc>
+        <!--<modelTexture>test.tga</modelTexture>-->
     </model>
 </models>

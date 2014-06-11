@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+//#include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <cstdlib>
@@ -27,6 +27,8 @@ enum displayType{
     FLATSHADED
 } drawType;
 
+bool flashOn;
+
 /**
  * Teken de scene.
  */
@@ -38,30 +40,22 @@ void renderScene(void) {
     glLoadIdentity();
     glBindTexture(GL_TEXTURE_2D, 0);
     
+
     cam->update();
 
-    //glColor3f(0, 1.0, 1.0);
-    //glutWireTeapot(0.5);
-    
-    //glPushMatrix();
-    //glColor3f(1, 1, 1);
-/*
-    for (int i = -50; i < 50; i++) {
-        glBegin(GL_LINES);
-        glVertex3f(i, 0, -50);
-        glVertex3f(i, 0, 50);
-        glEnd();
-    }
 
-    for (int i = -50; i < 50; i++) {
-        glBegin(GL_LINES);
-        glVertex3f(-50, 0, i);
-        glVertex3f(50, 0, i);
-        glEnd();
+    if(flashOn){
+        //flashlight
+        Coordinate camPos = cam->getCamPos();
+        GLfloat flashPos[] = { camPos.x, camPos.y, camPos.z, 0 };
+        GLfloat flashDir[] = { 0, 0, 0 };
+        glLightfv( GL_LIGHT1, GL_POSITION, flashPos );
+        glLightfv( GL_LIGHT1, GL_SPOT_DIRECTION, flashDir);
+    
+        glEnable(GL_LIGHT1); 
     }
     
-    //
-    */
+    
 
     glutSolidTeapot(0.5);
     for (unsigned int i = 0; i < models.size(); i++) {
@@ -78,10 +72,10 @@ void renderScene(void) {
 int main(int argc, char **argv) {
     // init GLUT.
     
+    flashOn = false;
+    
     drawType = SMOOTHSHADED;
     changeDisplayType();
-    
-    cam = new Camera();
     
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -111,6 +105,11 @@ int main(int argc, char **argv) {
     
     Loader* loader = new Loader();
     models = loader->parseXML();
+    if(loader->getCam()==NULL){
+        cam = new Camera();
+    }else{
+        cam = loader->getCam();
+    }
     delete loader;
     
     atexit(OnExit);
@@ -155,6 +154,14 @@ void init() {
     glEnable( GL_DEPTH_TEST );
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0); 
+    
+    //flashlight
+    GLfloat diffuse1[] = { 0, 0.2, 0, 1 };
+    GLfloat specular1[] = { 0.5, 0.7, 0, 1 };
+    glLightfv( GL_LIGHT1, GL_DIFFUSE, diffuse1 );
+    glLightfv( GL_LIGHT1, GL_SPECULAR, specular1 );
+    glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,95.0);
+    glLightf(GL_LIGHT1,GL_SPOT_EXPONENT,2.0);
     
 	// enable texturing
 	glEnable(GL_TEXTURE_2D);

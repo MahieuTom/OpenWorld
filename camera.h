@@ -5,6 +5,7 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include "coordinate.h"
+#include "ObjectModel.h"
 
 class Camera {
 private:
@@ -15,13 +16,15 @@ private:
     float angle;
     double pace;
     int xOrigin;
+    ObjectModel* fixObject;
 public:
-    Camera();
+    Camera(ObjectModel* fixObject = NULL);
     ~Camera() { }
     void update();
     void keyPress(int key, int x, int y);
     void mouseMove(int x, int y);
     void mouseButton(int button, int state, int x, int y);
+    Coordinate getCamPos();
 };
 
 #endif // CAMERA_H

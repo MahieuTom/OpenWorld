@@ -1,9 +1,10 @@
 #include "camera.h"
+#include "ObjectModel.h"
 
 /**
  * Initialiseer Toestenbord & Muis.
  */
-Camera::Camera() {
+Camera::Camera(ObjectModel* fixObject) {
     camPos = Coordinate(-5, 1, 5);
     lookAt = Coordinate(0.0, 0.0, 0.0);
     upAxis = Coordinate(0.0, 1.0, 0.0);
@@ -13,12 +14,18 @@ Camera::Camera() {
     pace = 0.2;
 
     xOrigin = -1;
+    this->fixObject = fixObject;
 }
 
 //-------------------------------------------------------------
 
 void Camera::update() {
     glMatrixMode(GL_MODELVIEW);
+    if(fixObject != NULL){
+        camPos.y = (fixObject->getModelZ(camPos.x,camPos.z) + camPos.y)/2;
+    }
+    //cam boven landschape
+    camPos.y += 1;
     glLoadIdentity();
     gluLookAt(camPos.x, camPos.y, camPos.z,
             camPos.x + lookAt.x, camPos.y + lookAt.y, camPos.z + lookAt.z,
@@ -88,3 +95,10 @@ void Camera::mouseButton(int button, int state, int x, int y) {
         }
     }
 }
+
+Coordinate Camera::getCamPos(){
+    return camPos;
+}
+
+
+

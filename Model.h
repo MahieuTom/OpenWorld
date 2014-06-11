@@ -45,16 +45,25 @@ public:
     
     void setTexture(unsigned int texture);
     
+    float getModelZ(float x, float y);
+    
+    
     virtual ~Model();
 private:
     QString modeltype;
     QString modelpad;
     
+    bool loaded;
+    
     float* Faces_Triangles;				// Stores the triangles
     float* normals;                                     // Stores the normals
     long TotalConnectedTriangles;			// Stores the total number of connected triangles
+    float* vertexBuffer;                                // Stores the points which make the object
     
     unsigned int texture;
+    unsigned int sizebuffer;
+    
+    float max(float a, float b);
 };
 
 #endif	/* MODEL_H */

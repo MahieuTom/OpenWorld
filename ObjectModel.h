@@ -18,13 +18,15 @@ public:
     
     void Draw();
     
+    float getModelZ(float x, float y);
+    
     virtual ~ObjectModel();
 private:
     Coordinate* pos;
     double xsize;
     double ysize;
     double zsize;
-    Model* model;
+    Model* model = NULL;
     bool modelOwner;
 };
 

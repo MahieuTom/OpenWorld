@@ -42,6 +42,13 @@ void ObjectModel::Draw(){
     glTranslatef(-pos->x, -pos->y, -pos->z);
 }
 
+float ObjectModel::getModelZ(float x, float y){
+    if(model == NULL){
+        return 0;
+    }
+    return model->getModelZ(x,y)+pos->y;
+}
+
 
 ObjectModel::~ObjectModel() {
     if(modelOwner){

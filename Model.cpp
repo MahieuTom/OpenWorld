@@ -14,6 +14,7 @@ Model::Model() {
     Faces_Triangles = new float[0];
     normals = new float[0];
     texture = 0;
+    loaded = false;
 }
 
 Model::Model(QString modeltype, QString modelpad) {
@@ -23,6 +24,7 @@ Model::Model(QString modeltype, QString modelpad) {
     Faces_Triangles = new float[0];
     normals = new float[0];
     texture = 0;
+    loaded = false;
 }
 
 Model::Model(const Model& orig) {
@@ -31,6 +33,7 @@ Model::Model(const Model& orig) {
     TotalConnectedTriangles = orig.TotalConnectedTriangles;
     Faces_Triangles = orig.Faces_Triangles;
     normals = orig.normals;
+    loaded = orig.loaded;
 }
 
 bool Model::loadModel() {
@@ -40,7 +43,6 @@ bool Model::loadModel() {
 
 int Model::loadOBJ() {
 
-    float* vertexBuffer; // Stores the points which make the object
     long TotalConnectedPoints = 0; // Stores the total number of connected verteces
 
     std::string line;
@@ -72,7 +74,6 @@ int Model::loadOBJ() {
                         &vertexBuffer[TotalConnectedPoints],
                         &vertexBuffer[TotalConnectedPoints + 1],
                         &vertexBuffer[TotalConnectedPoints + 2]);
-
                 TotalConnectedPoints += POINTS_PER_VERTEX; // Add 3 to the total connected points
             }
             if (line.c_str()[0] == 'f') // The first character is an 'f': on this line is a point stored
@@ -126,7 +127,8 @@ int Model::loadOBJ() {
                 TotalConnectedTriangles += TOTAL_FLOATS_IN_TRIANGLE;
             }
         }
-        delete vertexBuffer;
+        loaded = true;
+        sizebuffer = TotalConnectedPoints;
         objFile.close(); // Close OBJ file
     } else {
         std::cout << "Unable to open file";
@@ -182,10 +184,49 @@ void Model::setTexture(unsigned int texture){
     this->texture = texture;
 }
 
+float Model::getModelZ(float x, float z){
+    if(loaded){
+        std::vector<Coordinate*> dichtstebij;
+        for(int j = 0; j < 3; j++){
+            dichtstebij.push_back(new Coordinate());
+            dichtstebij.at(j)->x  = vertexBuffer[j*3];
+            dichtstebij.at(j)->y  = vertexBuffer[j*3+1];
+            dichtstebij.at(j)->z  = vertexBuffer[j*3+2];
+        }
+        for (unsigned int i = 9; i < sizebuffer; i+= 3) {
+            for(unsigned int j = 0; j < 3; j++){
+                
+                if( abs(x - dichtstebij.at(j)->x )+abs( z - dichtstebij.at(j)->z ) > abs(x - vertexBuffer[i]) + abs(z - vertexBuffer[i+2]) ){
+                    //nieuwe dichtste bij
+                    dichtstebij.at(j)->x  = vertexBuffer[i];
+                    dichtstebij.at(j)->y  = vertexBuffer[i+1];
+                    dichtstebij.at(j)->z  = vertexBuffer[i+2];
+                    //std::cout << "xdif: " << std::abs(x - vertexBuffer[i]) << " zdif: " << std::abs(z - vertexBuffer[i+2]) <<std::endl;
+                    //std::cout << "1: " << dichtstebij.at(0)->y << " 2: " << dichtstebij.at(1)->y << " 3: " << dichtstebij.at(2)->y <<std::endl;
+                    break;
+                }
+            }
+        }
+        float maxZpos = max(max(dichtstebij.at(0)->y,dichtstebij.at(1)->y),dichtstebij.at(2)->y);
+        //std::cout << "1: " << dichtstebij.at(0)->y << " 2: " << dichtstebij.at(1)->y << " 3: " << dichtstebij.at(2)->y <<std::endl;
+        for(unsigned int j = 0; j < dichtstebij.size(); j++){
+            delete dichtstebij.at(j);
+        }
+        return maxZpos;
+    }
+    return 0;
+}
+
+float Model::max(float a, float b) {
+  return (a<b)?b:a;
+}
+
 Model::~Model() {
     delete Faces_Triangles; // Stores the triangles
     delete normals; // Stores the normals
+    delete vertexBuffer;
     if(texture != 0){
         glDeleteTextures(1, &texture);
     }
 }
+
