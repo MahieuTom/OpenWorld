@@ -46,6 +46,7 @@ public:
     void setTexture(unsigned int texture);
     
     float getModelZ(float x, float y);
+    void setModelName(int modelName);
     
     
     virtual ~Model();
@@ -62,6 +63,8 @@ private:
     
     unsigned int texture;
     unsigned int sizebuffer;
+    
+    int modelName;
     
     float max(float a, float b);
 };

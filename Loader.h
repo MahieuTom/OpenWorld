@@ -38,6 +38,8 @@ private:
     };
     
     Camera* cam;
+    
+    int modelId;
 
     std::string location;
     std::vector<ModelPadPair> modelList;

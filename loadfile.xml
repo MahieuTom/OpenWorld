@@ -12,7 +12,7 @@
             <y>1</y>
             <z>1</z>
         </size>
-        <modelLoc type="obj">obj/landscape.obj</modelLoc>
+        <modelLoc type="obj" id="1">obj/landscape.obj</modelLoc>
         <modelTexture>grass.tga</modelTexture>
     </model>
     <model name="tree">
@@ -26,7 +26,7 @@
             <y>1</y>
             <z>1</z>
         </size>
-        <modelLoc type="obj">obj/treestump.obj</modelLoc>
+        <modelLoc type="obj" id="2">obj/treestump.obj</modelLoc>
         <modelTexture>w3.tga</modelTexture>
     </model>
     <model name="tree">
@@ -59,23 +59,23 @@
     </model>
     <model name="tree">
         <position>
-            <x>0</x>
-            <y>2</y>
-            <z>-2</z>
+            <x>5</x>
+            <y>1.5</y>
+            <z>6</z>
         </position>
         <size>
             <x>1</x>
             <y>1</y>
             <z>1</z>
         </size>
-        <modelLoc type="obj">obj/tree.obj</modelLoc>
+        <modelLoc type="obj" id="3">obj/tree.obj</modelLoc>
         <modelTexture>tree.tga</modelTexture>
     </model>
     <model name="tree">
         <position>
-            <x>5</x>
-            <y>1.5</y>
-            <z>6</z>
+            <x>0</x>
+            <y>2</y>
+            <z>-3</z>
         </position>
         <size>
             <x>1</x>
@@ -138,7 +138,7 @@
             <y>1</y>
             <z>1</z>
         </size>
-        <modelLoc type="obj">obj/house.obj</modelLoc>
+        <modelLoc type="obj" id="4">obj/house.obj</modelLoc>
         <modelTexture>house.tga</modelTexture>
     </model>
 </models>

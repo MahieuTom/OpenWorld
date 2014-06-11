@@ -17,6 +17,9 @@ void changeDisplayType();
 void keyPress(int key, int x, int y);
 void mouseMove(int x, int y);
 void mouseButton(int button, int state, int x, int y);
+void muisObjectenMain(int x, int y, unsigned int widthRadius, unsigned int heightRadius);
+void idToName(int id);
+
 
 std::vector<ObjectModel*> models;
 Camera* cam;
@@ -30,13 +33,21 @@ enum displayType {
 
 bool flashOn;
 
+//picking
+#define BUFSIZE 512
+GLuint selectBuf[BUFSIZE];
+
+int windowH, windowW;
+
+bool theepotSelected;
+
 /**
  * Teken de scene.
  */
 void renderScene(void) {
     glutSetWindow(mainWindow);
 
-    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClearColor(0.0, 0.0, 0.5, 0.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -57,17 +68,23 @@ void renderScene(void) {
         glEnable(GL_LIGHT1);
         //flashOn = false;
     } else {
-        glDisable(GL_LIGHT1); 
+        glDisable(GL_LIGHT1);
     }
 
     glTranslatef(0, 2.4, 0);
+    glPushName(20);
+    glColor3f(1,1,1);
+    if(theepotSelected){
+        glColor3f(1,0,0);
+    }
     glutSolidTeapot(0.3);
+    glPopName();
     glTranslatef(0, -2.4, 0);
-    
+    glColor3f(1,1,1);
     for (unsigned int i = 0; i < models.size(); i++) {
         models.at(i)->Draw();
     }
-    
+
 
     glFlush();
     glutSwapBuffers();
@@ -75,6 +92,8 @@ void renderScene(void) {
 
 int main(int argc, char **argv) {
     // init GLUT.
+    windowH = 600;
+    windowW = 800;
 
     flashOn = false;
 
@@ -84,9 +103,17 @@ int main(int argc, char **argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowPosition(100, 100);
-    glutInitWindowSize(800, 600);
+    glutInitWindowSize(windowW, windowH);
+
     // Maak viewport.
     mainWindow = glutCreateWindow("OpenWorld - OpenGL project");
+    
+    glutCreateMenu(menu);
+    glutAddMenuEntry("Wire", 0);
+    glutAddMenuEntry("Flat shading", 1);
+    glutAddMenuEntry("Smooth shading", 2);
+    glutAddMenuEntry("Quit", 3);
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
 
     // Tekenen van programma.
     glutDisplayFunc(renderScene);
@@ -96,16 +123,9 @@ int main(int argc, char **argv) {
     glutSpecialFunc(keyPress);
     glutMouseFunc(mouseButton);
     glutMotionFunc(mouseMove);
+    
+    atexit(OnExit);
 
-    glutCreateMenu(menu);
-    glutAddMenuEntry("Wire", 0);
-    glutAddMenuEntry("Flat shading", 1);
-    glutAddMenuEntry("Smooth shading", 2);
-    glutAddMenuEntry("Quit", 3);
-    glutAttachMenu(GLUT_RIGHT_BUTTON);
-
-
-    init();
 
     Loader* loader = new Loader();
     models = loader->parseXML();
@@ -115,8 +135,9 @@ int main(int argc, char **argv) {
         cam = loader->getCam();
     }
     delete loader;
-
-    atexit(OnExit);
+    
+    init();
+    
 
     // Go Go Glut.
     glutMainLoop();
@@ -133,7 +154,10 @@ void init() {
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClearDepth(1.0f);
 
-    glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
+
+    glInitNames();
+
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
     GLfloat amb_light[] = {0.1, 0.1, 0.1, 1.0};
     GLfloat diffuse[] = {0.6, 0.6, 0.6, 1};
@@ -163,12 +187,12 @@ void init() {
     glLightfv(GL_LIGHT1, GL_POSITION, flashPos);
     glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, flashDir);
     glEnable(GL_LIGHT1);
-    
+
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-    
-    GLfloat  specref[] =  { 1.0f, 1.0f, 1.0f, 1.0f };
-    glMaterialfv(GL_FRONT, GL_SPECULAR,specref);
-        glMateriali(GL_FRONT, GL_SHININESS,128);
+
+    GLfloat specref[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specref);
+    glMateriali(GL_FRONT, GL_SHININESS, 128);
 
     // enable texturing
     glEnable(GL_TEXTURE_2D);
@@ -187,11 +211,13 @@ void reshape(int w, int h) {
     if (h == 0) {
         h = 1;
     }
+    windowH = h;
+    windowW = w;
     //glMatrixMode(GL_PROJECTION);
-    glViewport(0, 0, (GLsizei) w, (GLsizei) h);
+    glViewport(0, 0, (GLsizei) windowW, (GLsizei) windowH);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(45.0, (GLfloat) w / (GLfloat) h, 1.0, 10000.0);
+    gluPerspective(45.0, (GLfloat) windowW / (GLfloat) windowH, 1.0, 10000.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
@@ -266,5 +292,102 @@ void mouseMove(int x, int y) {
  */
 void mouseButton(int button, int state, int x, int y) {
     cam->mouseButton(button, state, x, y);
+    if (button == GLUT_MIDDLE_BUTTON) {
+        if (state == GLUT_UP) {
+            muisObjectenMain(x, y, 2, 2);
+
+            idToName(selectBuf[1]);
+        }
+    }
     glutPostRedisplay();
+}
+
+void idToName(int id) {
+    theepotSelected = false;
+    switch (id) {
+        case 1:
+            std::cout << "Landschap" << std::endl;
+            break;
+        case 2:
+            std::cout << "Treestump" << std::endl;
+            break;
+        case 3:
+            std::cout << "Tree" << std::endl;
+            break;
+        case 4:
+            std::cout << "Hutje" << std::endl;
+            break;
+        case 20:
+            std::cout << "theepot" << std::endl;
+            theepotSelected = true;
+            break;
+        default :
+            std::cout << "Niets" << std::endl;
+            break;
+    }
+}
+
+void muisObjectenMain(int x, int y, unsigned int widthRadius, unsigned int heightRadius) {
+
+    GLint viewport[4];
+
+    //glutSetWindow(mainWindow);
+
+    glSelectBuffer(BUFSIZE, selectBuf);
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    glRenderMode(GL_SELECT);
+    glInitNames();
+    glPushName(0);
+
+
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+
+    // hier staat de marge rond de muis
+    gluPickMatrix(x, viewport[3] - y, widthRadius, heightRadius, viewport);
+    gluPerspective(45.0, (GLfloat) windowW / (GLfloat) windowH, 1.0, 10000.0);
+    cam->update();
+
+    glMatrixMode(GL_MODELVIEW);
+
+    renderScene();
+    glutSwapBuffers();
+
+
+
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+
+    GLint hits = glRenderMode(GL_RENDER);
+    GLint objectBuffer[BUFSIZE];
+
+    if (hits > 0) {
+        unsigned int i, j;
+        GLuint names, *ptr, minZ, *ptrNames, numberOfNames;
+
+        ptr = (GLuint *) selectBuf;
+        minZ = 0xffffffff;
+        for (i = 0; i < (unsigned int) hits; i++) {
+            names = *ptr;
+            ptr++;
+            if (*ptr < minZ) {
+                numberOfNames = names;
+                minZ = *ptr;
+                ptrNames = ptr + 2;
+            }
+
+            ptr += names + 2;
+        }
+
+        ptr = ptrNames;
+        for (j = 0; j < numberOfNames; j++, ptr++) {
+            objectBuffer[j] = *ptr;
+        }
+    }
+    glMatrixMode(GL_MODELVIEW);
+
+    for (int i = 0; i < BUFSIZE; i++) {
+        selectBuf[i] = objectBuffer[i];
+    }
 }

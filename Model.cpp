@@ -168,6 +168,7 @@ void Model::Draw() {
     if(texture != 0){
         glBindTexture(GL_TEXTURE_2D,texture);
     }
+    glPushName(modelName);
     glEnableClientState(GL_VERTEX_ARRAY); // Enable vertex arrays
     glEnableClientState(GL_NORMAL_ARRAY); // Enable normal arrays
     glVertexPointer(3, GL_FLOAT, 0, Faces_Triangles); // Vertex Pointer to triangle array
@@ -175,6 +176,7 @@ void Model::Draw() {
     glDrawArrays(GL_TRIANGLES, 0, TotalConnectedTriangles); // Draw the triangles
     glDisableClientState(GL_VERTEX_ARRAY); // Disable vertex arrays
     glDisableClientState(GL_NORMAL_ARRAY); // Disable normal arrays
+    glPopName();
     if(texture != 0){
         glBindTexture(GL_TEXTURE_2D, 0);
     }
@@ -216,6 +218,11 @@ float Model::getModelZ(float x, float z){
 
 float Model::max(float a, float b) {
   return (a<b)?b:a;
+}
+
+void Model::setModelName(int modelName){
+    this->modelName = modelName;
+    
 }
 
 Model::~Model() {

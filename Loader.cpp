@@ -11,6 +11,7 @@
 Loader::Loader() {
     location = ":/loadfile.xml";
     cam = NULL;
+    modelId = 0;
 }
 
 Loader::Loader(const Loader& orig) {
@@ -47,7 +48,7 @@ std::vector<ObjectModel*> Loader::parseXML() {
 
     mDocumentElement = mDocument.documentElement();
     QDomNodeList models = mDocumentElement.elementsByTagName("model");
-    std::cout << "aantal models: " << models.size();
+    std::cout << "aantal models: " << models.size() << std::endl;
     for (int i = 0; i < models.count(); i++) {
         loadedmodels.push_back(parseXMLModel(models.at(i).toElement()));
     }
@@ -85,6 +86,7 @@ ObjectModel* Loader::parseXMLModel(QDomElement model) {
     if(!modelfound){
         newModel = new Model(modeltype, modelpad);
         newModel->loadModel();
+        newModel->setModelName(getFirstByTag(model,"modelLoc").attribute("id").toInt());
         ModelPadPair pair;
         pair.model = newModel;
         pair.pad = modelpad.toStdString();
